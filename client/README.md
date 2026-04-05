@@ -38,7 +38,9 @@ Artifacts: `client/dist/`. Point your static host at `dist/` and either reverse-
 
 ## Proxy
 
-With `npm run dev`, requests to `/api` are forwarded to `http://localhost:5001` (see `vite.config.js`). Run the server alongside the client. If you change `PORT` in `server/.env`, update the proxy target to the same value.
+With `npm run dev`, requests to `/api` are forwarded to the backend origin. Default target is `http://localhost:5001` (see `vite.config.js`). Run the server alongside the client.
+
+Optional: copy `.env.example` to `.env` in `client/` and set `VITE_DEV_API_ORIGIN` if your API listens on another host or port (keep it aligned with `PORT` in `server/.env`).
 
 The HTTP client uses `baseURL: '/api'`, so the browser calls same-origin `/api/...` in development.
 
@@ -47,4 +49,4 @@ The HTTP client uses `baseURL: '/api'`, so the browser calls same-origin `/api/.
 - Expects the API contract documented in `server/README.md`.
 - Mutations are optimistic; failed requests revert local state and surface the server message in a toast when present.
 - No authentication layer; anyone who can reach the API can use it.
-- No client `.env` is required for the default dev setup.
+- No client `.env` is required for the default dev setup unless you change the API origin from `http://localhost:5001`.
