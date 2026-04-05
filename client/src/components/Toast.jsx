@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 
+const AUTO_DISMISS_MS = 8000
+
 export default function Toast({ message, onDismiss }) {
   useEffect(() => {
     if (!message) return undefined
-    const id = window.setTimeout(() => onDismiss(), 3000)
+    const id = window.setTimeout(() => onDismiss(), AUTO_DISMISS_MS)
     return () => window.clearTimeout(id)
   }, [message, onDismiss])
 
@@ -15,10 +17,17 @@ export default function Toast({ message, onDismiss }) {
       aria-live="polite"
     >
       <div
-        className="pointer-events-auto rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900 shadow-lg transition-opacity duration-300"
+        className="pointer-events-auto flex flex-col gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900 shadow-lg transition-opacity duration-300"
         role="alert"
       >
-        {message}
+        <p className="pr-1 leading-snug">{message}</p>
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="self-end text-xs font-medium text-red-800 underline decoration-red-300 underline-offset-2 hover:text-red-950"
+        >
+          Dismiss
+        </button>
       </div>
     </div>
   )

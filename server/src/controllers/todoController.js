@@ -21,7 +21,19 @@ async function createTodo(req, res) {
 }
 
 async function updateTodo(req, res) {
-  const { title, description } = req.body;
+  const body = req.body && typeof req.body === 'object' ? req.body : {};
+  const hasTitle = Object.prototype.hasOwnProperty.call(body, 'title');
+  const hasDescription = Object.prototype.hasOwnProperty.call(
+    body,
+    'description'
+  );
+  if (!hasTitle && !hasDescription) {
+    return res
+      .status(400)
+      .json({ message: 'Provide title and/or description' });
+  }
+
+  const { title, description } = body;
   const update = {};
   if (title !== undefined) update.title = title;
   if (description !== undefined) update.description = description;

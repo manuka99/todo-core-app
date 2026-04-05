@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import { apiErrorMessage } from '../utils/apiError'
+
+function sortTodosNewestFirst(list) {
+  return [...list].sort((a, b) => {
+    const ta = new Date(a.createdAt ?? 0).getTime()
+    const tb = new Date(b.createdAt ?? 0).getTime()
+    return tb - ta
+  })
+}
 import {
   createTodo as apiCreateTodo,
   deleteTodo as apiDeleteTodo,
@@ -107,11 +115,10 @@ export function useTodos() {
 
   const removeTodo = useCallback(async (id) => {
     let removed
-    let index = -1
     setTodos((prev) => {
-      index = prev.findIndex((t) => t._id === id)
-      if (index === -1) return prev
-      removed = prev[index]
+      const idx = prev.findIndex((t) => t._id === id)
+      if (idx === -1) return prev
+      removed = prev[idx]
       return prev.filter((t) => t._id !== id)
     })
     if (!removed) return
@@ -120,9 +127,8 @@ export function useTodos() {
       setError(null)
     } catch (err) {
       setTodos((prev) => {
-        const next = [...prev]
-        next.splice(index, 0, removed)
-        return next
+        if (prev.some((t) => t._id === removed._id)) return prev
+        return sortTodosNewestFirst([...prev, removed])
       })
       setError(apiErrorMessage(err))
       throw err
