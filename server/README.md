@@ -1,13 +1,13 @@
 # Server
 
-Express API for the TODO app.
+Express service exposing JSON REST endpoints for tasks. Mongoose persists documents. `express-async-errors` is loaded before route registration so rejected promises from async handlers flow to the error middleware.
 
-## Prerequisites
+## Requirements
 
-- Node.js 24+ (use `nvm use 24`)
-- MongoDB (Atlas or local) — required when using the database layer
+- Node.js 24+ (`nvm use 24`)
+- MongoDB instance and a valid `MONGODB_URI`
 
-## Setup
+## Install
 
 From the repository root:
 
@@ -15,23 +15,31 @@ From the repository root:
 npm install
 ```
 
-Copy environment variables:
+## Configuration
+
+From `server/`:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` and set `MONGODB_URI` when using the database layer.
+| Variable | Purpose | Example |
+|----------|---------|---------|
+| `PORT` | Listen port | `5001` |
+| `MONGODB_URI` | Database connection string | `mongodb://127.0.0.1:27017/todos` or Atlas SRV URI |
+| `NODE_ENV` | When set to `production`, generic text is returned for 500 responses instead of internal details | omit or `development` |
 
-## Run
+Do not commit `.env` (it is ignored by git).
 
-Development (nodemon):
+## Commands
+
+Development (file watching via nodemon):
 
 ```bash
 npm run dev --workspace=server
 ```
 
-Or from `server/`:
+From `server/`:
 
 ```bash
 npm run dev
@@ -43,19 +51,31 @@ Production:
 npm start --workspace=server
 ```
 
-## Environment variables
-
-| Variable       | Description                    | Example                          |
-|----------------|--------------------------------|----------------------------------|
-| `PORT`         | HTTP port                      | `5000`                           |
-| `MONGODB_URI`  | MongoDB connection string      | `mongodb://localhost:27017/todos` or Atlas URI |
+The app connects to MongoDB before accepting traffic and exits if the connection cannot be established.
 
 ## MongoDB
 
-- **Atlas:** Create a cluster, add a database user, allow your IP (or `0.0.0.0/0` for dev), copy the connection string into `MONGODB_URI`.
-- **Local:** Run `mongod` and use e.g. `mongodb://127.0.0.1:27017/todos`.
+- **Atlas:** Create a cluster and database user, allow your client IP (or `0.0.0.0/0` only for non-production experimentation), then paste the connection string into `MONGODB_URI`.
+- **Local:** Run `mongod` and point `MONGODB_URI` at something like `mongodb://127.0.0.1:27017/todos`.
 
-## Notes
+## HTTP API
 
-- `/api` is mounted; REST routes for todos are not there yet.
-- CORS is open for development; tighten for production as needed.
+Base path: `/api`. Request bodies are JSON unless noted. Responses are JSON except `DELETE`, which returns `204` with an empty body.
+
+| Method | Path | Body | Success |
+|--------|------|------|---------|
+| GET | `/api/todos` | — | `200` — array, newest first |
+| POST | `/api/todos` | `{ "title": string, "description"?: string }` | `201` — created document |
+| PUT | `/api/todos/:id` | `{ "title"?: string, "description"?: string }` | `200` — updated document |
+| PATCH | `/api/todos/:id/done` | — | `200` — document with toggled `done` |
+| DELETE | `/api/todos/:id` | — | `204` |
+
+Errors: `{ "message": string }` with status `400`, `404`, or `500` as appropriate (e.g. missing title, unknown id, database failure).
+
+Document fields: `_id`, `title`, `description` (optional), `done`, `createdAt`, `updatedAt` (Mongoose timestamps).
+
+## Deployment notes
+
+- CORS is open; narrow `origin` in production.
+- There is no authentication or multi-tenant isolation.
+- Validation combines route-level checks and Mongoose schema rules.
