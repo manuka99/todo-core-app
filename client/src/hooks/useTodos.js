@@ -12,6 +12,7 @@ export function useTodos() {
   const [todos, setTodos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [initialLoadFailed, setInitialLoadFailed] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -20,9 +21,15 @@ export function useTodos() {
       setError(null)
       try {
         const data = await getTodos()
-        if (!cancelled) setTodos(data)
+        if (!cancelled) {
+          setTodos(data)
+          setInitialLoadFailed(false)
+        }
       } catch (err) {
-        if (!cancelled) setError(apiErrorMessage(err))
+        if (!cancelled) {
+          setError(apiErrorMessage(err))
+          setInitialLoadFailed(true)
+        }
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -122,10 +129,14 @@ export function useTodos() {
     }
   }, [])
 
+  const clearError = useCallback(() => setError(null), [])
+
   return {
     todos,
     loading,
     error,
+    clearError,
+    initialLoadFailed,
     addTodo,
     editTodo,
     toggleTodo,

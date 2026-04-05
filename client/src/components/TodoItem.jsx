@@ -40,8 +40,8 @@ export default function TodoItem({ todo, toggleTodo, removeTodo, editTodo }) {
 
   return (
     <li
-      className={`flex gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm ${
-        todo.done ? 'opacity-50' : ''
+      className={`flex gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-opacity duration-300 animate-fade-in ${
+        todo.done ? 'opacity-50' : 'opacity-100'
       }`}
     >
       <input
@@ -49,7 +49,7 @@ export default function TodoItem({ todo, toggleTodo, removeTodo, editTodo }) {
         checked={!!todo.done}
         disabled={pending}
         onChange={() => toggleTodo(todo._id)}
-        className="mt-1 h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-500 disabled:cursor-not-allowed"
+        className="mt-1 h-4 w-4 rounded border-slate-300 text-slate-900 transition-colors duration-200 focus:ring-slate-500 disabled:cursor-not-allowed"
         aria-label={todo.done ? 'Mark as not done' : 'Mark as done'}
       />
       <div className="min-w-0 flex-1">
@@ -74,12 +74,18 @@ export default function TodoItem({ todo, toggleTodo, removeTodo, editTodo }) {
         ) : (
           <>
             <h2
-              className={`font-medium text-slate-900 ${todo.done ? 'line-through' : ''}`}
+              className={`font-medium text-slate-900 transition-all duration-200 ${
+                todo.done ? 'line-through' : ''
+              }`}
             >
               {todo.title}
             </h2>
             {todo.description ? (
-              <p className={`mt-1 text-sm text-slate-600 ${todo.done ? 'line-through' : ''}`}>
+              <p
+                className={`mt-1 text-sm text-slate-600 transition-all duration-200 ${
+                  todo.done ? 'line-through' : ''
+                }`}
+              >
                 {todo.description}
               </p>
             ) : null}

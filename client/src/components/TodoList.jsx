@@ -1,21 +1,32 @@
 import { useTodos } from '../hooks/useTodos'
 import AddTodoForm from './AddTodoForm'
+import EmptyTodoState from './EmptyTodoState'
 import TodoItem from './TodoItem'
-import ErrorBanner from './ui/ErrorBanner'
+import Toast from './Toast'
 import Spinner from './ui/Spinner'
 
 export default function TodoList() {
-  const { todos, loading, error, addTodo, editTodo, toggleTodo, removeTodo } = useTodos()
+  const {
+    todos,
+    loading,
+    error,
+    clearError,
+    initialLoadFailed,
+    addTodo,
+    editTodo,
+    toggleTodo,
+    removeTodo,
+  } = useTodos()
 
   return (
     <div>
-      <AddTodoForm addTodo={addTodo} />
+      <Toast message={error} onDismiss={clearError} />
 
-      <ErrorBanner>{error}</ErrorBanner>
+      <AddTodoForm addTodo={addTodo} />
 
       {loading ? (
         <Spinner />
-      ) : (
+      ) : todos.length > 0 ? (
         <ul className="space-y-3">
           {todos.map((todo) => (
             <TodoItem
@@ -27,6 +38,12 @@ export default function TodoList() {
             />
           ))}
         </ul>
+      ) : initialLoadFailed ? (
+        <p className="rounded-lg border border-slate-200 bg-white px-4 py-8 text-center text-sm text-slate-600 shadow-sm">
+          Could not load todos. Refresh the page and try again.
+        </p>
+      ) : (
+        <EmptyTodoState />
       )}
     </div>
   )

@@ -31,7 +31,7 @@ export default function AddTodoForm({ addTodo }) {
   return (
     <form
       onSubmit={onSubmit}
-      className="mb-8 rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+      className="mb-8 rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-shadow duration-200 hover:shadow-md"
     >
       <div className="space-y-4">
         <TodoFormFields
