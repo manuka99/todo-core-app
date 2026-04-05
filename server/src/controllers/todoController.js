@@ -1,7 +1,7 @@
 const Todo = require('../models/Todo');
 
 function notFound() {
-  const err = new Error('Todo not found');
+  const err = new Error('Not found');
   err.statusCode = 404;
   return err;
 }

@@ -22,7 +22,7 @@ export default function AddTodoForm({ addTodo }) {
       await addTodo(todoCreateBody(values))
       reset(emptyTodoFormValues)
     } catch {
-      //
+      return
     } finally {
       setSubmitting(false)
     }
@@ -42,7 +42,7 @@ export default function AddTodoForm({ addTodo }) {
           optionalDescriptionHint
         />
         <Button type="submit" variant="primary" disabled={submitting}>
-          {submitting ? 'Adding…' : 'Add todo'}
+          {submitting ? 'Adding…' : 'Add task'}
         </Button>
       </div>
     </form>

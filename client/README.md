@@ -1,12 +1,12 @@
 # Client
 
-React + Vite frontend for the TODO app.
+React (Vite) single-page app: task list, inline editing, optimistic updates with rollback on failure, toast notifications for errors, and an empty state when there are no items.
 
-## Prerequisites
+## Requirements
 
 - Node.js 24+ (`nvm use 24`)
 
-## Setup
+## Install
 
 From the repository root:
 
@@ -14,24 +14,37 @@ From the repository root:
 npm install
 ```
 
-## Run
+## Local development
 
 ```bash
 npm run dev --workspace=client
 ```
 
-Or from `client/`:
+From `client/`:
 
 ```bash
 npm run dev
 ```
 
-Vite serves the app (default port **5173**). Open the URL shown in the terminal.
+Dev server: `http://localhost:5173` by default.
 
-## API proxy
+## Build
 
-`vite.config.js` proxies `/api` to `http://localhost:5001` (the server default). Start the server (`npm run dev --workspace=server`) so API calls from the browser work during development. If you change `PORT` in `server/.env`, update the proxy target in `vite.config.js` to match.
+```bash
+npm run build --workspace=client
+```
 
-## Notes
+Artifacts: `client/dist/`. Point your static host at `dist/` and either reverse-proxy `/api` to the Express service or configure the client to call a public API origin if you change the base URL.
 
-- Header and layout only for now; list and forms are still to build.
+## Proxy
+
+With `npm run dev`, requests to `/api` are forwarded to `http://localhost:5001` (see `vite.config.js`). Run the server alongside the client. If you change `PORT` in `server/.env`, update the proxy target to the same value.
+
+The HTTP client uses `baseURL: '/api'`, so the browser calls same-origin `/api/...` in development.
+
+## Scope
+
+- Expects the API contract documented in `server/README.md`.
+- Mutations are optimistic; failed requests revert local state and surface the server message in a toast when present.
+- No authentication layer; anyone who can reach the API can use it.
+- No client `.env` is required for the default dev setup.

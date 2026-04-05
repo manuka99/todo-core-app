@@ -34,7 +34,7 @@ export default function TodoItem({ todo, toggleTodo, removeTodo, editTodo }) {
       await editTodo(todo._id, todoUpdateBody(values))
       setIsEditing(false)
     } catch {
-      //
+      return
     }
   })
 
@@ -50,7 +50,7 @@ export default function TodoItem({ todo, toggleTodo, removeTodo, editTodo }) {
         disabled={pending}
         onChange={() => toggleTodo(todo._id)}
         className="mt-1 h-4 w-4 rounded border-slate-300 text-slate-900 transition-colors duration-200 focus:ring-slate-500 disabled:cursor-not-allowed"
-        aria-label={todo.done ? 'Mark as not done' : 'Mark as done'}
+        aria-label={todo.done ? 'Mark incomplete' : 'Mark complete'}
       />
       <div className="min-w-0 flex-1">
         {isEditing ? (

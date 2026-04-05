@@ -40,7 +40,7 @@ export default function TodoList() {
         </ul>
       ) : initialLoadFailed ? (
         <p className="rounded-lg border border-slate-200 bg-white px-4 py-8 text-center text-sm text-slate-600 shadow-sm">
-          Could not load todos. Refresh the page and try again.
+          Unable to load tasks. Reload the page.
         </p>
       ) : (
         <EmptyTodoState />

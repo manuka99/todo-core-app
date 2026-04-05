@@ -17,10 +17,8 @@ export default function EmptyTodoState() {
           />
         </svg>
       </div>
-      <p className="text-base font-medium text-slate-800">No todos yet</p>
-      <p className="mt-2 text-sm text-slate-500">
-        Add your first task using the form above.
-      </p>
+      <p className="text-base font-medium text-slate-800">No tasks yet</p>
+      <p className="mt-2 text-sm text-slate-500">Create one with the form above.</p>
     </div>
   )
 }
