@@ -47,7 +47,7 @@ npm start --workspace=server
 
 | Variable       | Description                    | Example                          |
 |----------------|--------------------------------|----------------------------------|
-| `PORT`         | HTTP port                      | `5000`                           |
+| `PORT`         | HTTP port                      | `5001`                           |
 | `MONGODB_URI`  | MongoDB connection string      | `mongodb://localhost:27017/todos` or Atlas URI |
 
 ## MongoDB

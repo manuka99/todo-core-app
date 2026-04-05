@@ -6,7 +6,7 @@ Full-stack TODO application (React + Express + MongoDB). Monorepo with npm works
 
 ```bash
 npm install
-npm run dev:server   # API (default port 5000)
+npm run dev:server   # API (default port 5001)
 npm run dev:client   # Vite dev server
 ```
 
